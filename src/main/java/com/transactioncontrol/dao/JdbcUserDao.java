@@ -23,12 +23,13 @@ public class JdbcUserDao implements UserDao {
     public Optional<User> findByUsername(String username) {
         String sql = "SELECT * FROM ONOFFUSER WHERE username = ?";
         try {
-            LOGGER.info("SELECT * FROM ONOFFUSER WHERE username = " + username);
+            LOGGER.info("SELECT * FROM ONOFFUSER WHERE username = {}", username);
             User user = jdbcTemplate.queryForObject(sql, new Object[]{username}, new UserRowMapper());
-            LOGGER.info("FOUND USER: " + user.getName() + ",role: " + user.getRule() + ",status: " + user.getStatus());
-            return Optional.ofNullable(user);
+            assert user != null;
+            LOGGER.info("FOUND USER: {},role: {},status: {}", user.getName(), user.getRule(), user.getStatus());
+            return Optional.of(user);
         } catch (Exception e) {
-            LOGGER.info("GET USER INFOR ERROR: " + e.getMessage());
+            LOGGER.info("GET USER INFOR ERROR: {}", e.getMessage());
             return Optional.empty();
         }
     }
